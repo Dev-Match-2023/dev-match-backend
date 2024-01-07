@@ -65,6 +65,7 @@ public class TokenProvider implements
     } // InitializingBean 인터페이스를 구현한 빈이 초기화될 때 호출되는 메소드
 
     public TokenResponse createFrom(Authentication authentication) {
+
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));

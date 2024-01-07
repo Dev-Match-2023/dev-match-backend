@@ -1,5 +1,6 @@
-package com.example.devmatch_backend.domain.project;
+package com.example.devmatch_backend.domain.project.entity;
 
+import com.example.devmatch_backend.domain.project.dto.ProjectDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -35,6 +36,18 @@ public class Project {
 
     @Column(name = "max_designers")
     private Integer maxDesigners;
+
+    public static Project toEntity(ProjectDto projectDto) {
+        Project project = new Project();
+        project.setProjectTitle(projectDto.getProject_title());
+        project.setProjectTags(projectDto.getProject_tags());
+        project.setProjectStatus(projectDto.getProject_status());
+        project.setProjectOwner(projectDto.getProject_owner());
+        project.setMaxDevelopers(projectDto.getMax_developers());
+        project.setMaxPlanners(projectDto.getMax_planners());
+        project.setMaxDesigners(projectDto.getMax_designers());
+        return project;
+    }
 
 }
 

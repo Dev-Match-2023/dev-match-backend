@@ -1,9 +1,11 @@
-package com.example.devmatch_backend.domain.project;
+package com.example.devmatch_backend.domain.project.entity;
 
 import com.example.devmatch_backend.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "matchings")
 public class Matching {
     @Id
@@ -18,5 +20,7 @@ public class Matching {
     @ManyToOne
     @JoinColumn(name = "participant_id")
     private User participant;
+
+    private Boolean accepted;
 
 }

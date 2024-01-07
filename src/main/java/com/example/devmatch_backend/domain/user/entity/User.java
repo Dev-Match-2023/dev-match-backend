@@ -1,16 +1,14 @@
 package com.example.devmatch_backend.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Getter
+@Data
 @Table(name = "users")
 @NoArgsConstructor
 public class User {
@@ -59,10 +57,9 @@ public class User {
                     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "authorityName", referencedColumnName = "authorityName")
+                    @JoinColumn(name = "authority_name", referencedColumnName = "authority_name")
             }
     )
-    @EqualsAndHashCode.Exclude
     private Set<Authority> authorities;
 
     @Builder

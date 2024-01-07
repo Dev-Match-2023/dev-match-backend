@@ -2,6 +2,7 @@ package com.example.devmatch_backend.domain.user.jwt;
 
 import com.example.devmatch_backend.domain.user.entity.User;
 import com.example.devmatch_backend.domain.user.repository.UserRepository;
+import com.example.devmatch_backend.exception.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import static com.example.devmatch_backend.exception.ErrorCode.INVALID_TOKEN;
 
 
 @Slf4j
@@ -37,6 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             tokenProvider.validate(jwt);
             if (jwt != null) {
                 Authentication authentication = tokenProvider.resolveFrom(jwt);
+                System.out.println(authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 log.info("valid authentication: {}, uri: {}", authentication,
@@ -50,21 +54,20 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (principal instanceof UserDetails) {
                     User user = userRepository.findByOauthIdAndActiveIsTrue(authentication.getName())
                             .orElseThrow(
-                                    () -> new RuntimeException());
-//                                    () -> new CustomException(INVALID_TOKEN, String.format("'%s' not found", authentication.getName())));
+                                    () -> new CustomException(INVALID_TOKEN, String.format("'%s' not found", authentication.getName())));
                     userId = user.getUserId();
 
                 }
 
 
             } else {
-//                throw new CustomException(INVALID_TOKEN, "token is invalid in jwt filter");
-                throw new RuntimeException();
+                throw new CustomException(INVALID_TOKEN, "token is invalid in jwt filter");
             }
 
             // set userId in request
             request.setAttribute("id", userId);
         } catch (Exception e) {
+            throw new CustomException(INVALID_TOKEN, e.getMessage());
         }
 
         chain.doFilter(request, response);
